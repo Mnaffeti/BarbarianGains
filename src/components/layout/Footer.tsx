@@ -1,8 +1,17 @@
+"use client";
+
 import Link from 'next/link';
 import { Facebook, Instagram, Twitter } from 'lucide-react';
 import SwissGainsLogo from '@/components/icons/SwissGainsLogo';
+import { useState, useEffect } from 'react';
 
 export default function Footer() {
+  const [year, setYear] = useState<number | null>(null);
+
+  useEffect(() => {
+    setYear(new Date().getFullYear());
+  }, []);
+
   return (
     <footer className="border-t bg-background">
       <div className="container mx-auto px-4 py-8">
@@ -36,7 +45,7 @@ export default function Footer() {
         </div>
         <div className="mt-8 border-t pt-8 text-center">
           <p className="text-sm text-muted-foreground">
-            &copy; {new Date().getFullYear()} Swiss Gains. All rights reserved.
+            {year !== null ? `© ${year}` : `©`} Swiss Gains. All rights reserved.
           </p>
         </div>
       </div>
