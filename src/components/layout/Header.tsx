@@ -1,10 +1,11 @@
+
 'use client';
 
 import Link from 'next/link';
 import { ShoppingCart, Menu, Dumbbell, Brain, Newspaper, Info, MessageSquare } from 'lucide-react';
 import BarbarianGainsLogo from '@/components/icons/BarbarianGainsLogo';
 import { Button } from '@/components/ui/button';
-import { Sheet, SheetContent, SheetTrigger, SheetClose } from '@/components/ui/sheet';
+import { Sheet, SheetContent, SheetTrigger, SheetClose, SheetHeader, SheetTitle } from '@/components/ui/sheet';
 import { usePathname } from 'next/navigation';
 import { cn } from '@/lib/utils';
 import * as React from "react";
@@ -64,11 +65,13 @@ export default function Header() {
               </Button>
             </SheetTrigger>
             <SheetContent side="left" className="w-full max-w-xs bg-background p-6">
-              <div className="mb-6">
-                <Link href="/" className="flex items-center gap-2">
-                 <BarbarianGainsLogo />
-                </Link>
-              </div>
+              <SheetHeader className="mb-6 text-left">
+                <SheetTitle>
+                  <Link href="/" className="flex items-center gap-2">
+                   <BarbarianGainsLogo />
+                  </Link>
+                </SheetTitle>
+              </SheetHeader>
               <nav className="flex flex-col space-y-4">
                 {navLinksConfig.map((link) => (
                   <SheetClose key={link.href} asChild>
