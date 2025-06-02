@@ -1,4 +1,4 @@
-"use client";
+'use client';
 
 import Link from 'next/link';
 import { ShoppingCart, Menu, Dumbbell, Brain, Newspaper, Info, MessageSquare } from 'lucide-react';
@@ -8,45 +8,56 @@ import { Sheet, SheetContent, SheetTrigger, SheetClose } from '@/components/ui/s
 import { usePathname } from 'next/navigation';
 import { cn } from '@/lib/utils';
 import * as React from "react";
-
-
-const navLinks = [
-  { href: '/', label: 'Home', icon: Dumbbell },
-  { href: '/products', label: 'Products', icon: Dumbbell },
-  { href: '/advisor', label: 'AI Advisor', icon: Brain },
-  { href: '/blog', label: 'Blog', icon: Newspaper },
-  { href: '/about', label: 'About Us', icon: Info },
-  { href: '/contact', label: 'Contact', icon: MessageSquare },
-];
+import LanguageSwitcher from './LanguageSwitcher';
+import useTranslations from '@/hooks/useTranslations';
 
 export default function Header() {
   const pathname = usePathname();
   const [cartItemCount, setCartItemCount] = React.useState(0); // Placeholder
+  const { t, currentLocale } = useTranslations();
+
+  const navLinksConfig = [
+    { href: '/', labelKey: 'navHome', icon: Dumbbell },
+    { href: '/products', labelKey: 'navProducts', icon: Dumbbell },
+    { href: '/advisor', labelKey: 'navAIAdvisor', icon: Brain },
+    { href: '/blog', labelKey: 'navBlog', icon: Newspaper },
+    { href: '/about', labelKey: 'navAboutUs', icon: Info },
+    { href: '/contact', labelKey: 'navContact', icon: MessageSquare },
+  ];
+
+  const getLocalizedPath = (path: string) => {
+    if (path === '/') return `/${currentLocale}`;
+    return `/${currentLocale}${path}`;
+  }
 
   return (
     <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
       <div className="container mx-auto flex h-16 items-center justify-between px-4">
-        <Link href="/" className="flex items-center gap-2">
+        <Link href={getLocalizedPath('/')} className="flex items-center gap-2">
           <BarbarianGainsLogo />
         </Link>
 
         <nav className="hidden md:flex items-center space-x-6">
-          {navLinks.map((link) => (
-            <Link
-              key={link.href}
-              href={link.href}
-              className={cn(
-                "text-sm font-medium transition-colors hover:text-primary",
-                pathname === link.href ? "text-primary" : "text-foreground/60"
-              )}
-            >
-              {link.label}
-            </Link>
-          ))}
+          {navLinksConfig.map((link) => {
+            const localizedHref = getLocalizedPath(link.href);
+            return (
+              <Link
+                key={link.href}
+                href={localizedHref}
+                className={cn(
+                  "text-sm font-medium transition-colors hover:text-primary",
+                  pathname === localizedHref ? "text-primary" : "text-foreground/60"
+                )}
+              >
+                {t(link.labelKey)}
+              </Link>
+            );
+          })}
         </nav>
 
-        <div className="flex items-center space-x-4">
-          <Link href="/cart">
+        <div className="flex items-center space-x-2">
+          <LanguageSwitcher />
+          <Link href={getLocalizedPath('/cart')}>
             <Button variant="ghost" size="icon" aria-label="Shopping Cart">
               <ShoppingCart className="h-5 w-5" />
               {cartItemCount > 0 && (
@@ -66,25 +77,28 @@ export default function Header() {
             </SheetTrigger>
             <SheetContent side="left" className="w-full max-w-xs bg-background p-6">
               <div className="mb-6">
-                <Link href="/" className="flex items-center gap-2">
+                <Link href={getLocalizedPath('/')} className="flex items-center gap-2">
                  <BarbarianGainsLogo />
                 </Link>
               </div>
               <nav className="flex flex-col space-y-4">
-                {navLinks.map((link) => (
+                {navLinksConfig.map((link) => {
+                  const localizedHref = getLocalizedPath(link.href);
+                  return (
                   <SheetClose key={link.href} asChild>
                     <Link
-                      href={link.href}
+                      href={localizedHref}
                       className={cn(
                         "flex items-center gap-3 rounded-md px-3 py-2 text-base font-medium transition-colors hover:bg-accent hover:text-accent-foreground",
-                        pathname === link.href ? "bg-accent text-accent-foreground" : "text-foreground/80"
+                        pathname === localizedHref ? "bg-accent text-accent-foreground" : "text-foreground/80"
                       )}
                     >
                       <link.icon className="h-5 w-5" />
-                      {link.label}
+                      {t(link.labelKey)}
                     </Link>
                   </SheetClose>
-                ))}
+                  );
+                })}
               </nav>
             </SheetContent>
           </Sheet>
