@@ -1,6 +1,7 @@
+
 "use client";
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -10,7 +11,7 @@ import PageHeader from '@/components/shared/PageHeader';
 import { Separator } from '@/components/ui/separator';
 import { Switch } from "@/components/ui/switch";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
-import { AlertCircle, CheckCircle2 } from 'lucide-react';
+import { AlertCircle, CheckCircle2, Tag, X } from 'lucide-react';
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { useToast } from "@/hooks/use-toast";
 import {
@@ -39,22 +40,56 @@ const shippingSchema = z.object({
 });
 
 // Placeholder cart data
-const mockCartSummary = {
-  items: [
+const mockCartItems = [
     { id: '1', name: 'Whey Protein Isolate', quantity: 1, price: 49.99, imageUrl: 'https://placehold.co/100x100.png' },
     { id: '2', name: 'Creatine Monohydrate', quantity: 2, price: 29.99, imageUrl: 'https://placehold.co/100x100.png' },
-  ],
-  subtotal: 49.99 + 29.99 * 2,
-  shipping: 0, // Assume free shipping
-  get total() { return this.subtotal + this.shipping; }
-};
+];
 
+const MOCK_SHIPPING_COST = 0; // Assume free shipping
+
+type AppliedPromoCode = {
+  code: string;
+  type: 'percentage' | 'fixed';
+  value: number;
+};
 
 export default function CheckoutPage() {
   const [isGuestCheckout, setIsGuestCheckout] = useState(true);
   const [paymentMethod, setPaymentMethod] = useState("creditCard");
   const [orderPlaced, setOrderPlaced] = useState(false);
   const { toast } = useToast();
+
+  const [promoCodeInput, setPromoCodeInput] = useState("");
+  const [appliedPromoCode, setAppliedPromoCode] = useState<AppliedPromoCode | null>(null);
+  const [promoCodeMessage, setPromoCodeMessage] = useState<string | null>(null);
+  
+  const [subtotal, setSubtotal] = useState(0);
+  const [discountAmount, setDiscountAmount] = useState(0);
+  const [total, setTotal] = useState(0);
+
+  useEffect(() => {
+    const currentSubtotal = mockCartItems.reduce((acc, item) => acc + item.price * item.quantity, 0);
+    setSubtotal(currentSubtotal);
+  }, []);
+
+  useEffect(() => {
+    let currentDiscount = 0;
+    if (appliedPromoCode) {
+      if (appliedPromoCode.type === 'percentage') {
+        currentDiscount = subtotal * (appliedPromoCode.value / 100);
+      } else if (appliedPromoCode.type === 'fixed') {
+        currentDiscount = appliedPromoCode.value;
+      }
+    }
+    // Ensure discount does not exceed subtotal
+    currentDiscount = Math.min(currentDiscount, subtotal);
+    setDiscountAmount(currentDiscount);
+  }, [appliedPromoCode, subtotal]);
+
+  useEffect(() => {
+    setTotal(subtotal - discountAmount + MOCK_SHIPPING_COST);
+  }, [subtotal, discountAmount]);
+
 
   const form = useForm<z.infer<typeof shippingSchema>>({
     resolver: zodResolver(shippingSchema),
@@ -65,7 +100,7 @@ export default function CheckoutPage() {
       address: "",
       apartment: "",
       city: "",
-      country: "Switzerland", // Default or make it a select
+      country: "Switzerland", 
       postalCode: "",
       phone: "",
     },
@@ -81,8 +116,29 @@ export default function CheckoutPage() {
       description: "Thank you for your purchase. Your gains are on the way!",
       variant: "default",
     });
-    // In a real app, you'd redirect to an order confirmation page or clear the cart.
   }
+
+  const handleApplyPromoCode = () => {
+    const code = promoCodeInput.trim().toUpperCase();
+    if (code === "GAINS10") {
+      setAppliedPromoCode({ code: "GAINS10", type: "percentage", value: 10 });
+      setPromoCodeMessage("GAINS10 applied: 10% off!");
+      setPromoCodeInput("");
+    } else if (code === "BARBARIAN20") {
+      setAppliedPromoCode({ code: "BARBARIAN20", type: "fixed", value: 20 });
+      setPromoCodeMessage("BARBARIAN20 applied: 20 TND off!");
+      setPromoCodeInput("");
+    } else {
+      setAppliedPromoCode(null);
+      setPromoCodeMessage("Invalid promo code.");
+    }
+  };
+
+  const handleRemovePromoCode = () => {
+    setAppliedPromoCode(null);
+    setPromoCodeMessage("Promo code removed.");
+    setDiscountAmount(0);
+  };
 
   if (orderPlaced) {
     return (
@@ -96,15 +152,13 @@ export default function CheckoutPage() {
     );
   }
 
-
   return (
     <div>
       <PageHeader title="Checkout" subtitle="Securely complete your purchase." />
 
       <div className="grid lg:grid-cols-3 gap-8">
-        {/* Shipping & Payment Forms */}
         <div className="lg:col-span-2">
-          <Card className="shadow-lg">
+          <Card className="shadow-lg mb-8">
             <CardHeader>
               <CardTitle className="text-2xl font-headline">Shipping Information</CardTitle>
             </CardHeader>
@@ -152,17 +206,17 @@ export default function CheckoutPage() {
                   )} />
                   <div className="grid md:grid-cols-3 gap-6">
                     <FormField control={form.control} name="city" render={({ field }) => (
-                      <FormItem><FormLabel>City</FormLabel><FormControl><Input placeholder="Zurich" {...field} /></FormControl><FormMessage /></FormItem>
+                      <FormItem><FormLabel>City</FormLabel><FormControl><Input placeholder="Tunis" {...field} /></FormControl><FormMessage /></FormItem>
                     )} />
                     <FormField control={form.control} name="country" render={({ field }) => (
-                      <FormItem><FormLabel>Country</FormLabel><FormControl><Input placeholder="Switzerland" {...field} /></FormControl><FormMessage /></FormItem>
+                      <FormItem><FormLabel>Country</FormLabel><FormControl><Input placeholder="Tunisia" {...field} /></FormControl><FormMessage /></FormItem>
                     )} />
                     <FormField control={form.control} name="postalCode" render={({ field }) => (
-                      <FormItem><FormLabel>Postal Code</FormLabel><FormControl><Input placeholder="8001" {...field} /></FormControl><FormMessage /></FormItem>
+                      <FormItem><FormLabel>Postal Code</FormLabel><FormControl><Input placeholder="1001" {...field} /></FormControl><FormMessage /></FormItem>
                     )} />
                   </div>
                   <FormField control={form.control} name="phone" render={({ field }) => (
-                    <FormItem><FormLabel>Phone (optional)</FormLabel><FormControl><Input type="tel" placeholder="+41 12 345 67 89" {...field} /></FormControl>
+                    <FormItem><FormLabel>Phone (optional)</FormLabel><FormControl><Input type="tel" placeholder="+216 12 345 678" {...field} /></FormControl>
                     <FormDescription>For delivery updates.</FormDescription><FormMessage /></FormItem>
                   )} />
                 
@@ -190,7 +244,7 @@ export default function CheckoutPage() {
                     </div>
                   )}
                   <Button type="submit" size="lg" className="w-full mt-8" disabled={form.formState.isSubmitting}>
-                    {form.formState.isSubmitting ? "Processing..." : `Place Order ($${mockCartSummary.total.toFixed(2)})`}
+                    {form.formState.isSubmitting ? "Processing..." : `Place Order (${total.toFixed(2)} TND)`}
                   </Button>
                 </form>
               </Form>
@@ -198,14 +252,13 @@ export default function CheckoutPage() {
           </Card>
         </div>
 
-        {/* Order Summary */}
         <div className="lg:col-span-1">
           <Card className="sticky top-20 shadow-lg">
             <CardHeader>
               <CardTitle className="text-2xl font-headline">Order Summary</CardTitle>
             </CardHeader>
             <CardContent className="space-y-4">
-              {mockCartSummary.items.map(item => (
+              {mockCartItems.map(item => (
                 <div key={item.id} className="flex items-center justify-between gap-4">
                   <div className="flex items-center gap-3">
                     <img src={item.imageUrl} alt={item.name} className="w-12 h-12 rounded object-cover" data-ai-hint="product thumbnail"/>
@@ -214,22 +267,62 @@ export default function CheckoutPage() {
                       <p className="text-xs text-muted-foreground">Qty: {item.quantity}</p>
                     </div>
                   </div>
-                  <p className="text-sm font-medium">${(item.price * item.quantity).toFixed(2)}</p>
+                  <p className="text-sm font-medium">{(item.price * item.quantity).toFixed(2)} TND</p>
                 </div>
               ))}
               <Separator />
               <div className="flex justify-between text-sm">
                 <p className="text-muted-foreground">Subtotal</p>
-                <p>${mockCartSummary.subtotal.toFixed(2)}</p>
+                <p>{subtotal.toFixed(2)} TND</p>
               </div>
+
+              {/* Promo Code Section */}
+              <Separator />
+              <div>
+                <Label htmlFor="promo-code" className="text-sm font-medium flex items-center mb-2">
+                  <Tag className="w-4 h-4 mr-2 text-primary" /> Promo Code
+                </Label>
+                <div className="flex items-center space-x-2">
+                  <Input
+                    type="text"
+                    id="promo-code"
+                    placeholder="Enter code"
+                    value={promoCodeInput}
+                    onChange={(e) => setPromoCodeInput(e.target.value)}
+                    className="flex-grow"
+                    disabled={!!appliedPromoCode}
+                  />
+                  {!appliedPromoCode ? (
+                    <Button onClick={handleApplyPromoCode} size="sm">Apply</Button>
+                  ) : (
+                    <Button onClick={handleRemovePromoCode} variant="outline" size="sm" className="text-destructive border-destructive hover:bg-destructive/10">
+                      <X className="w-4 h-4 mr-1" /> Remove
+                    </Button>
+                  )}
+                </div>
+                {promoCodeMessage && (
+                  <p className={`text-xs mt-2 ${appliedPromoCode && appliedPromoCode.code ? 'text-green-600' : 'text-destructive'}`}>
+                    {promoCodeMessage}
+                  </p>
+                )}
+              </div>
+              {/* End Promo Code Section */}
+              
+              {discountAmount > 0 && (
+                <div className="flex justify-between text-sm text-green-600">
+                  <p>Discount ({appliedPromoCode?.code})</p>
+                  <p>-{discountAmount.toFixed(2)} TND</p>
+                </div>
+              )}
+              
               <div className="flex justify-between text-sm">
                 <p className="text-muted-foreground">Shipping</p>
-                <p>{mockCartSummary.shipping === 0 ? 'Free' : `$${mockCartSummary.shipping.toFixed(2)}`}</p>
+                <p>{MOCK_SHIPPING_COST === 0 ? 'Free' : `${MOCK_SHIPPING_COST.toFixed(2)} TND`}</p>
               </div>
               <Separator />
               <div className="flex justify-between text-lg font-bold">
                 <p>Total</p>
-                <p>${mockCartSummary.total.toFixed(2)}</p>
+                <p>{total.toFixed(2)} TND</p>
               </div>
             </CardContent>
           </Card>
@@ -238,3 +331,6 @@ export default function CheckoutPage() {
     </div>
   );
 }
+
+
+    
