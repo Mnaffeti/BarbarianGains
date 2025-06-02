@@ -6,10 +6,10 @@ import { useParams } from 'next/navigation';
 import { getProductById } from '@/lib/data';
 import type { Product } from '@/lib/types';
 import { Button } from '@/components/ui/button';
-import { Card, CardContent } from '@/components/ui/card';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Star, Minus, Plus, ShoppingCart } from 'lucide-react';
-import PageHeader from '@/components/shared/PageHeader'; // Assuming you might want a header sometimes
+import { Star, Minus, Plus, ShoppingCart, Info } from 'lucide-react';
+import PageHeader from '@/components/shared/PageHeader';
 import { useToast } from "@/hooks/use-toast";
 import { Separator } from '@/components/ui/separator';
 import Link from 'next/link';
@@ -54,7 +54,6 @@ export default function ProductDetailsPage() {
     : 0;
 
   const handleAddToCart = () => {
-    // Placeholder for actual cart logic
     console.log(`Added ${quantity} of ${product.name} to cart.`);
     toast({
       title: "Added to Cart!",
@@ -65,7 +64,7 @@ export default function ProductDetailsPage() {
 
   return (
     <div className="container mx-auto px-4 py-8">
-      <div className="grid md:grid-cols-2 gap-8 lg:gap-12">
+      <div className="grid md:grid-cols-2 gap-8 lg:gap-12 mb-12">
         {/* Product Image Gallery */}
         <div className="aspect-square relative rounded-lg overflow-hidden shadow-lg">
           <Image
@@ -75,7 +74,6 @@ export default function ProductDetailsPage() {
             objectFit="cover"
             data-ai-hint={product.dataAiHint}
           />
-          {/* TODO: Add more images as thumbnails if available */}
         </div>
 
         {/* Product Info */}
@@ -133,6 +131,26 @@ export default function ProductDetailsPage() {
         </div>
       </div>
 
+      {/* Nutrient Values Card */}
+      {product.nutrientValues && product.nutrientValues.length > 0 && (
+        <Card className="mb-12 shadow-lg">
+          <CardHeader>
+            <CardTitle className="text-xl font-headline flex items-center">
+              <Info className="mr-2 h-5 w-5 text-primary" />
+              Key Nutrient Values
+            </CardTitle>
+          </CardHeader>
+          <CardContent className="space-y-3">
+            {product.nutrientValues.map((nutrient, index) => (
+              <div key={index} className="flex justify-between items-center text-sm">
+                <span className="text-foreground/80">{nutrient.name}:</span>
+                <span className="font-medium text-foreground">{nutrient.value}</span>
+              </div>
+            ))}
+          </CardContent>
+        </Card>
+      )}
+
       {/* Product Details Tabs */}
       <div className="mt-12 lg:mt-16">
         <Tabs defaultValue="description" className="w-full">
@@ -177,7 +195,6 @@ export default function ProductDetailsPage() {
             ) : (
               <p>No reviews yet for this product.</p>
             )}
-            {/* TODO: Add review submission form */}
           </TabsContent>
         </Tabs>
       </div>

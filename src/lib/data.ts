@@ -21,6 +21,12 @@ export const mockProducts: Product[] = [
     ],
     stock: 100,
     sku: 'SWISS-WPI-001',
+    nutrientValues: [
+      { name: 'Protein per scoop', value: '35g' },
+      { name: 'BCAAs', value: '7g' },
+      { name: 'Calories', value: '150' },
+      { name: 'Sugar', value: '1g' },
+    ],
   },
   {
     id: '2',
@@ -39,6 +45,10 @@ export const mockProducts: Product[] = [
     ],
     stock: 150,
     sku: 'PEAK-CM-002',
+    nutrientValues: [
+      { name: 'Creatine Monohydrate', value: '5g per serving' },
+      { name: 'Servings per container', value: '60' },
+    ],
   },
   {
     id: '3',
@@ -58,6 +68,12 @@ export const mockProducts: Product[] = [
     ],
     stock: 80,
     sku: 'ALPHA-PRE-003',
+    nutrientValues: [
+      { name: 'Caffeine Anhydrous', value: '250mg' },
+      { name: 'Beta-Alanine', value: '3.2g' },
+      { name: 'Citrulline Malate', value: '6g' },
+      { name: 'Focus Matrix', value: 'Proprietary Blend' },
+    ],
   },
   {
     id: '4',
@@ -77,6 +93,12 @@ export const mockProducts: Product[] = [
     ],
     stock: 70,
     sku: 'PLANT-VPRO-004',
+    nutrientValues: [
+      { name: 'Protein per scoop', value: '25g' },
+      { name: 'Fiber', value: '5g' },
+      { name: 'Calories', value: '130' },
+      { name: 'Iron', value: '4mg' },
+    ],
   },
   {
     id: '5',
@@ -93,6 +115,12 @@ export const mockProducts: Product[] = [
     reviews: [],
     stock: 200,
     sku: 'SWISS-MULTI-005',
+    nutrientValues: [
+      { name: 'Vitamin A', value: '100% DV' },
+      { name: 'Vitamin C', value: '150% DV' },
+      { name: 'Vitamin D3', value: '200% DV' },
+      { name: 'Zinc', value: '75% DV' },
+    ],
   },
 ];
 

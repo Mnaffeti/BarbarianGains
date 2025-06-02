@@ -15,6 +15,7 @@ export type Product = {
   reviews: { rating: number; text: string; author: string; date: string }[];
   stock: number;
   sku: string;
+  nutrientValues?: { name: string; value: string }[];
 };
 
 export type Article = {
