@@ -13,6 +13,8 @@ import PageHeader from '@/components/shared/PageHeader'; // Assuming you might w
 import { useToast } from "@/hooks/use-toast";
 import { Separator } from '@/components/ui/separator';
 import Link from 'next/link';
+import { Label } from '@/components/ui/label';
+import { Input } from '@/components/ui/input';
 
 export default function ProductDetailsPage() {
   const params = useParams();
