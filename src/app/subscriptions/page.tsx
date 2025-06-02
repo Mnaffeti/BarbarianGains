@@ -20,7 +20,7 @@ export default function SubscriptionsPage() {
         </CardHeader>
         <CardContent>
           <p className="text-muted-foreground mb-6">
-            We're working hard to bring you a seamless subscription service for your favorite Swiss Gains products.
+            We're working hard to bring you a seamless subscription service for your favorite Barbarian Gains products.
             Stay tuned for updates!
           </p>
           <Link href="/products">

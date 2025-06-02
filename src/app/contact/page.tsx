@@ -121,7 +121,7 @@ export default function ContactPage() {
             Feel free to reach out to us through any of the following channels. We aim to respond within 24 business hours.
           </p>
           <div className="space-y-4">
-            <ContactInfoItem icon={Mail} label="Email Us" value="support@swissgains.com" href="mailto:support@swissgains.com" />
+            <ContactInfoItem icon={Mail} label="Email Us" value="support@barbariangains.com" href="mailto:support@barbariangains.com" />
             <ContactInfoItem icon={Phone} label="Call Us" value="+41 22 123 4567 (Mon-Fri, 9am-5pm CET)" href="tel:+41221234567" />
             <ContactInfoItem icon={MapPin} label="Our Office" value="Bahnhofstrasse 1, 8001 Zürich, Switzerland (Visits by appointment only)" />
           </div>

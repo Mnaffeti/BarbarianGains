@@ -7,7 +7,7 @@ export default function AboutPage() {
   return (
     <div className="space-y-16">
       <PageHeader
-        title="About Swiss Gains"
+        title="About Barbarian Gains"
         subtitle="Fueling Your Ambition with Premium Sports Nutrition"
       />
 
@@ -15,7 +15,7 @@ export default function AboutPage() {
         <div>
           <h2 className="text-3xl font-headline font-semibold mb-6">Our Mission</h2>
           <p className="text-lg text-foreground/80 leading-relaxed mb-4">
-            At Swiss Gains, we are dedicated to providing athletes and fitness enthusiasts with the highest quality sports nutrition supplements. We believe that with the right fuel, dedication, and expert guidance, anyone can achieve their peak performance and transform their physique.
+            At Barbarian Gains, we are dedicated to providing athletes and fitness enthusiasts with the highest quality sports nutrition supplements. We believe that with the right fuel, dedication, and expert guidance, anyone can achieve their peak performance and transform their physique.
           </p>
           <p className="text-lg text-foreground/80 leading-relaxed">
             Our formulations are backed by science, crafted with premium ingredients, and manufactured to the strictest quality standards. We're more than just a supplement company; we're your partners in the pursuit of excellence.

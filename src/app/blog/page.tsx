@@ -11,7 +11,7 @@ export default function BlogPage() {
   return (
     <div>
       <PageHeader
-        title="Swiss Gains Blog"
+        title="Barbarian Gains Blog"
         subtitle="Expert insights on supplements, nutrition, and achieving your fitness goals."
       />
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">

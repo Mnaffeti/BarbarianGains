@@ -53,7 +53,7 @@ export default function HomePage() {
           </h1>
           <p className="text-lg md:text-xl text-foreground/80 mb-8 max-w-2xl mx-auto">
             Discover premium sports nutrition supplements designed to help you achieve your fitness goals.
-            Fuel your ambition with Swiss Gains.
+            Fuel your ambition with Barbarian Gains.
           </p>
           <Link href="/products">
             <Button size="lg" className="text-lg px-8 py-6">Shop All Products</Button>
@@ -79,7 +79,7 @@ export default function HomePage() {
       {/* Value Propositions Section */}
       <section className="py-16 bg-card rounded-lg shadow-lg">
         <div className="container mx-auto px-4">
-          <h2 className="text-3xl font-headline font-bold text-center mb-12">Why Choose Swiss Gains?</h2>
+          <h2 className="text-3xl font-headline font-bold text-center mb-12">Why Choose Barbarian Gains?</h2>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
             {valueProps.map((prop) => (
               <div key={prop.title} className="flex flex-col items-center text-center p-6 border border-border rounded-lg hover:shadow-md transition-shadow">

@@ -5,8 +5,8 @@ import Header from '@/components/layout/Header';
 import Footer from '@/components/layout/Footer';
 
 export const metadata: Metadata = {
-  title: 'Swiss Gains - Premium Sports Nutrition',
-  description: 'High-quality supplements for your fitness journey. Achieve your goals with Swiss Gains.',
+  title: 'Barbarian Gains - Premium Sports Nutrition',
+  description: 'High-quality supplements for your fitness journey. Achieve your goals with Barbarian Gains.',
 };
 
 export default function RootLayout({

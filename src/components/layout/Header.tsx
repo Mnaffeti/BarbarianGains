@@ -2,7 +2,7 @@
 
 import Link from 'next/link';
 import { ShoppingCart, Menu, Dumbbell, Brain, Newspaper, Info, MessageSquare } from 'lucide-react';
-import SwissGainsLogo from '@/components/icons/SwissGainsLogo';
+import BarbarianGainsLogo from '@/components/icons/BarbarianGainsLogo';
 import { Button } from '@/components/ui/button';
 import { Sheet, SheetContent, SheetTrigger, SheetClose } from '@/components/ui/sheet';
 import { usePathname } from 'next/navigation';
@@ -27,7 +27,7 @@ export default function Header() {
     <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
       <div className="container mx-auto flex h-16 items-center justify-between px-4">
         <Link href="/" className="flex items-center gap-2">
-          <SwissGainsLogo />
+          <BarbarianGainsLogo />
         </Link>
 
         <nav className="hidden md:flex items-center space-x-6">
@@ -67,7 +67,7 @@ export default function Header() {
             <SheetContent side="left" className="w-full max-w-xs bg-background p-6">
               <div className="mb-6">
                 <Link href="/" className="flex items-center gap-2">
-                 <SwissGainsLogo />
+                 <BarbarianGainsLogo />
                 </Link>
               </div>
               <nav className="flex flex-col space-y-4">

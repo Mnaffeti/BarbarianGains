@@ -2,7 +2,7 @@
 
 import Link from 'next/link';
 import { Facebook, Instagram, Twitter } from 'lucide-react';
-import SwissGainsLogo from '@/components/icons/SwissGainsLogo';
+import BarbarianGainsLogo from '@/components/icons/BarbarianGainsLogo';
 import { useState, useEffect } from 'react';
 
 export default function Footer() {
@@ -18,7 +18,7 @@ export default function Footer() {
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
           <div>
             <Link href="/" className="inline-block mb-4">
-              <SwissGainsLogo />
+              <BarbarianGainsLogo />
             </Link>
             <p className="text-sm text-muted-foreground">
               Premium sports nutrition for peak performance.
@@ -45,7 +45,7 @@ export default function Footer() {
         </div>
         <div className="mt-8 border-t pt-8 text-center">
           <p className="text-sm text-muted-foreground">
-            {year !== null ? `© ${year}` : `©`} Swiss Gains. All rights reserved.
+            {year !== null ? `© ${year}` : `©`} Barbarian Gains. All rights reserved.
           </p>
         </div>
       </div>
