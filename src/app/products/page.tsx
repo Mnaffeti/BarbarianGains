@@ -1,3 +1,4 @@
+
 "use client";
 
 import { useState, useMemo } from 'react';
@@ -28,13 +29,15 @@ const productBrands = Array.from(new Set(mockProducts.map(p => p.brand)));
 const MIN_PRICE = 0;
 const MAX_PRICE = Math.max(...mockProducts.map(p => p.price), 100);
 
+const ALL_BRANDS_VALUE = "all";
+
 
 export default function ProductsPage() {
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
   const [selectedGoals, setSelectedGoals] = useState<string[]>([]);
   const [selectedDietaryNeeds, setSelectedDietaryNeeds] = useState<string[]>([]);
-  const [selectedBrand, setSelectedBrand] = useState<string>('');
+  const [selectedBrand, setSelectedBrand] = useState<string>(ALL_BRANDS_VALUE);
   const [priceRange, setPriceRange] = useState<[number, number]>([MIN_PRICE, MAX_PRICE]);
 
   const handleCheckboxChange = (setter: React.Dispatch<React.SetStateAction<string[]>>, value: string, checked: boolean) => {
@@ -46,7 +49,7 @@ export default function ProductsPage() {
     setSelectedCategories([]);
     setSelectedGoals([]);
     setSelectedDietaryNeeds([]);
-    setSelectedBrand('');
+    setSelectedBrand(ALL_BRANDS_VALUE);
     setPriceRange([MIN_PRICE, MAX_PRICE]);
   };
 
@@ -56,7 +59,7 @@ export default function ProductsPage() {
       const matchesCategory = selectedCategories.length === 0 || selectedCategories.includes(product.category);
       const matchesGoal = selectedGoals.length === 0 || selectedGoals.includes(product.goal);
       const matchesDietaryNeeds = selectedDietaryNeeds.length === 0 || selectedDietaryNeeds.every(need => product.dietaryNeeds?.includes(need as any));
-      const matchesBrand = selectedBrand === '' || product.brand === selectedBrand;
+      const matchesBrand = selectedBrand === ALL_BRANDS_VALUE || product.brand === selectedBrand;
       const matchesPrice = product.price >= priceRange[0] && product.price <= priceRange[1];
 
       return matchesSearchTerm && matchesCategory && matchesGoal && matchesDietaryNeeds && matchesBrand && matchesPrice;
@@ -101,7 +104,7 @@ export default function ProductsPage() {
             <SelectValue placeholder="All Brands" />
           </SelectTrigger>
           <SelectContent>
-            <SelectItem value="">All Brands</SelectItem>
+            <SelectItem value={ALL_BRANDS_VALUE}>All Brands</SelectItem>
             {productBrands.map(brand => (
               <SelectItem key={brand} value={brand}>{brand}</SelectItem>
             ))}
@@ -202,3 +205,4 @@ function CheckboxItem({ id, label, checked, onCheckedChange }: CheckboxItemProps
     </div>
   );
 }
+
