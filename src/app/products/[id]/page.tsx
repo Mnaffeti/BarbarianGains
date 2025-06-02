@@ -1,3 +1,4 @@
+
 "use client";
 
 import { useState, useEffect } from 'react';
@@ -27,11 +28,11 @@ export default function ProductDetailsPage() {
   useEffect(() => {
     if (id) {
       const fetchedProduct = getProductById(id);
-      if (fetchedProduct) {
-        setProduct(fetchedProduct);
-      }
+      setProduct(fetchedProduct || null); // Set product or null if not found
       setIsLoading(false);
     }
+    // If id is not yet available, isLoading remains true, which is correct.
+    // The effect runs again when id becomes available.
   }, [id]);
 
   if (isLoading) {
@@ -70,9 +71,11 @@ export default function ProductDetailsPage() {
           <Image
             src={product.imageUrl}
             alt={product.name}
-            layout="fill"
-            objectFit="cover"
+            fill
+            sizes="(max-width: 768px) 100vw, 50vw"
+            style={{objectFit: 'cover'}}
             data-ai-hint={product.dataAiHint}
+            priority // Consider adding priority for LCP images
           />
         </div>
 
@@ -93,7 +96,7 @@ export default function ProductDetailsPage() {
             </div>
           )}
 
-          <p className="text-2xl font-headline font-semibold text-primary">${product.price.toFixed(2)}</p>
+          <p className="text-2xl font-headline font-semibold text-primary">{product.price.toFixed(2)} TND</p>
           <p className="text-foreground/80 leading-relaxed">{product.description}</p>
 
           {product.dietaryNeeds && product.dietaryNeeds.length > 0 && (
@@ -201,3 +204,5 @@ export default function ProductDetailsPage() {
     </div>
   );
 }
+
+    
