@@ -17,7 +17,7 @@ import { useToast } from '@/hooks/use-toast';
 import { getIdTokenResult, User } from 'firebase/auth';
 import { AlertCircle, Loader2 } from 'lucide-react';
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
-import Link from 'next/link'; // Added Link import
+import Link from 'next/link';
 
 const loginSchema = z.object({
   email: z.string().email({ message: "Invalid email address." }),
@@ -126,7 +126,7 @@ export default function LoginPage() {
                 )}
               />
             </CardContent>
-            <CardFooter className="flex flex-col gap-4">
+            <CardFooter className="flex flex-col gap-4 pt-2">
               <Button type="submit" className="w-full" disabled={isSubmitting}>
                 {isSubmitting ? (
                   <>
@@ -136,7 +136,12 @@ export default function LoginPage() {
                   "Login"
                 )}
               </Button>
-              <p className="text-sm text-muted-foreground">
+              <div className="text-sm text-muted-foreground text-center w-full">
+                <Link href="/forgot-password" className="font-medium text-primary hover:underline">
+                  Forgot Password?
+                </Link>
+              </div>
+              <p className="text-sm text-muted-foreground text-center w-full">
                 Don&apos;t have an account?{' '}
                 <Link href="/register" className="font-medium text-primary hover:underline">
                   Sign Up
