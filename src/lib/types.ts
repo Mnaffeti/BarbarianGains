@@ -1,3 +1,4 @@
+
 export type Product = {
   id: string;
   name: string;
@@ -32,4 +33,22 @@ export type Article = {
 
 export type CartItem = Product & {
   quantity: number;
+};
+
+// New type for Firestore-based Nutrition Products
+export type NutritionInfo = {
+  calories: number;
+  protein: number; // grams
+  carbs: number;   // grams
+  fat: number;     // grams
+};
+
+export type NutritionProduct = {
+  id?: string; // Firestore document ID
+  name: string;
+  description: string;
+  price: number;
+  imageUrl: string;
+  stock: number;
+  nutrition: NutritionInfo;
 };
