@@ -3,6 +3,7 @@
 
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
+import Link from 'next/link';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import * as z from 'zod';
@@ -12,62 +13,57 @@ import { Label } from '@/components/ui/label';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
 import PageHeader from '@/components/shared/PageHeader';
-import { signInWithEmailPassword } from '@/lib/firebase/auth';
+import { signUpWithEmailPassword } from '@/lib/firebase/auth';
 import { useToast } from '@/hooks/use-toast';
-import { getIdTokenResult, User } from 'firebase/auth';
 import { AlertCircle, Loader2 } from 'lucide-react';
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
-import Link from 'next/link'; // Added Link import
 
-const loginSchema = z.object({
+const registerSchema = z.object({
   email: z.string().email({ message: "Invalid email address." }),
   password: z.string().min(6, { message: "Password must be at least 6 characters." }),
+  confirmPassword: z.string()
+}).refine(data => data.password === data.confirmPassword, {
+  message: "Passwords don't match.",
+  path: ["confirmPassword"], 
 });
 
-type LoginFormValues = z.infer<typeof loginSchema>;
+type RegisterFormValues = z.infer<typeof registerSchema>;
 
-export default function LoginPage() {
+export default function RegisterPage() {
   const router = useRouter();
   const { toast } = useToast();
   const [serverError, setServerError] = useState<string | null>(null);
 
-  const form = useForm<LoginFormValues>({
-    resolver: zodResolver(loginSchema),
+  const form = useForm<RegisterFormValues>({
+    resolver: zodResolver(registerSchema),
     defaultValues: {
       email: "",
       password: "",
+      confirmPassword: "",
     },
   });
 
   const { handleSubmit, formState: { isSubmitting } } = form;
 
-  async function onSubmit(data: LoginFormValues) {
+  async function onSubmit(data: RegisterFormValues) {
     setServerError(null);
     try {
-      const userCredential = await signInWithEmailPassword(data.email, data.password);
-      const user = userCredential.user as User;
-      
-      const idTokenResult = await getIdTokenResult(user, true); 
-      
+      await signUpWithEmailPassword(data.email, data.password);
       toast({
-        title: "Login Successful",
-        description: "Welcome back!",
+        title: "Registration Successful",
+        description: "Welcome! You are now logged in.",
       });
-
-      if (idTokenResult.claims.role === 'admin') {
-        router.push('/admin');
-      } else {
-        router.push('/');
-      }
+      router.push('/'); // Redirect to home page
     } catch (error: any) {
-      console.error("Login failed:", error);
+      console.error("Registration failed:", error);
       let errorMessage = "An unexpected error occurred. Please try again.";
       if (error.code) {
         switch (error.code) {
-          case 'auth/user-not-found':
-          case 'auth/wrong-password':
-          case 'auth/invalid-credential':
-            errorMessage = 'Invalid email or password.';
+          case 'auth/email-already-in-use':
+            errorMessage = 'This email address is already in use.';
+            break;
+          case 'auth/weak-password':
+            errorMessage = 'The password is too weak. Please choose a stronger password.';
             break;
           case 'auth/invalid-email':
             errorMessage = 'Please enter a valid email address.';
@@ -79,7 +75,7 @@ export default function LoginPage() {
       setServerError(errorMessage);
       toast({
         variant: "destructive",
-        title: "Login Failed",
+        title: "Registration Failed",
         description: errorMessage,
       });
     }
@@ -87,19 +83,19 @@ export default function LoginPage() {
 
   return (
     <div>
-      <PageHeader title="Login" subtitle="Access your Barbarian Gains account." />
+      <PageHeader title="Create Account" subtitle="Join Barbarian Gains today!" />
       <Card className="w-full max-w-md mx-auto shadow-xl">
         <Form {...form}>
           <form onSubmit={handleSubmit(onSubmit)}>
             <CardHeader>
-              <CardTitle className="text-2xl font-headline">Welcome Back</CardTitle>
-              <CardDescription>Enter your credentials to log in.</CardDescription>
+              <CardTitle className="text-2xl font-headline">Sign Up</CardTitle>
+              <CardDescription>Enter your details to create an account.</CardDescription>
             </CardHeader>
             <CardContent className="space-y-6">
               {serverError && (
                 <Alert variant="destructive">
                   <AlertCircle className="h-4 w-4" />
-                  <AlertTitle>Login Error</AlertTitle>
+                  <AlertTitle>Registration Error</AlertTitle>
                   <AlertDescription>{serverError}</AlertDescription>
                 </Alert>
               )}
@@ -125,21 +121,32 @@ export default function LoginPage() {
                   </FormItem>
                 )}
               />
+              <FormField
+                control={form.control}
+                name="confirmPassword"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Confirm Password</FormLabel>
+                    <FormControl><Input type="password" placeholder="••••••••" {...field} /></FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
             </CardContent>
             <CardFooter className="flex flex-col gap-4">
               <Button type="submit" className="w-full" disabled={isSubmitting}>
                 {isSubmitting ? (
                   <>
-                    <Loader2 className="mr-2 h-4 w-4 animate-spin" /> Logging in...
+                    <Loader2 className="mr-2 h-4 w-4 animate-spin" /> Creating Account...
                   </>
                 ) : (
-                  "Login"
+                  "Create Account"
                 )}
               </Button>
               <p className="text-sm text-muted-foreground">
-                Don&apos;t have an account?{' '}
-                <Link href="/register" className="font-medium text-primary hover:underline">
-                  Sign Up
+                Already have an account?{' '}
+                <Link href="/login" className="font-medium text-primary hover:underline">
+                  Login
                 </Link>
               </p>
             </CardFooter>
