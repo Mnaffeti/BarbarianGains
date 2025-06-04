@@ -19,7 +19,7 @@ const BarbarianGainsLogo = (props: SVGProps<SVGSVGElement>) => (
       Barbarian
     </text>
     <text
-      x="190"
+      x="160"
       y="35"
       fontFamily="Space Grotesk, sans-serif"
       fontSize="30"
