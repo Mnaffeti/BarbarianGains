@@ -1,4 +1,6 @@
 
+import type { Timestamp } from 'firebase/firestore';
+
 export type Product = {
   id: string;
   name: string;
@@ -51,4 +53,10 @@ export type NutritionProduct = {
   imageUrl: string;
   stock: number;
   nutrition: NutritionInfo;
+};
+
+export type Note = {
+  id?: string;
+  text: string;
+  createdAt: Timestamp;
 };

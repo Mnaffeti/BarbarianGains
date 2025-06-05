@@ -9,10 +9,10 @@ import {
   getDoc,
   query,
   orderBy,
-  Timestamp // If you plan to use Timestamps
+  Timestamp
 } from 'firebase/firestore';
 import { db } from './config';
-import type { NutritionProduct } from '@/lib/types';
+import type { NutritionProduct, Note } from '@/lib/types';
 
 const PRODUCTS_COLLECTION = 'products';
 
@@ -78,6 +78,40 @@ export const deleteNutritionProduct = async (id: string): Promise<void> => {
     await deleteDoc(docRef);
   } catch (e) {
     console.error("Error deleting document: ", e);
+    throw e;
+  }
+};
+
+// --- Notes Example ---
+const NOTES_COLLECTION = 'notes';
+
+export const addNote = async (noteText: string): Promise<string> => {
+  try {
+    if (!noteText.trim()) {
+      throw new Error("Note text cannot be empty.");
+    }
+    const docRef = await addDoc(collection(db, NOTES_COLLECTION), {
+      text: noteText,
+      createdAt: Timestamp.now(),
+    });
+    return docRef.id;
+  } catch (e) {
+    console.error("Error adding note: ", e);
+    throw e;
+  }
+};
+
+export const getNotes = async (): Promise<Note[]> => {
+  try {
+    const q = query(collection(db, NOTES_COLLECTION), orderBy("createdAt", "desc"));
+    const querySnapshot = await getDocs(q);
+    const notes: Note[] = [];
+    querySnapshot.forEach((doc) => {
+      notes.push({ id: doc.id, ...doc.data() } as Note);
+    });
+    return notes;
+  } catch (e) {
+    console.error("Error getting notes: ", e);
     throw e;
   }
 };

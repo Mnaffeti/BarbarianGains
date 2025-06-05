@@ -2,7 +2,7 @@
 "use client";
 
 import Link from 'next/link';
-import { ShoppingCart, Menu, Dumbbell, Brain, Newspaper, Info, MessageSquare, LogIn, LogOut, UserCog } from 'lucide-react';
+import { ShoppingCart, Menu, Dumbbell, Brain, Newspaper, Info, MessageSquare, LogIn, LogOut, UserCog, Database } from 'lucide-react'; // Added Database icon
 import BarbarianGainsLogo from '@/components/icons/BarbarianGainsLogo';
 import { Button } from '@/components/ui/button';
 import { Sheet, SheetContent, SheetTrigger, SheetClose, SheetHeader, SheetTitle } from '@/components/ui/sheet';
@@ -21,6 +21,7 @@ const navLinks = [
   { href: '/blog', label: 'Blog', icon: Newspaper },
   { href: '/about', label: 'About Us', icon: Info },
   { href: '/contact', label: 'Contact', icon: MessageSquare },
+  { href: '/firestore-example', label: 'Firestore Demo', icon: Database }, // Added Firestore Demo link
 ];
 
 export default function Header() {
@@ -110,7 +111,7 @@ export default function Header() {
             </SheetTrigger>
             <SheetContent side="left" className="w-full max-w-xs bg-background p-0">
               <SheetHeader className="p-6 border-b">
-                 <SheetTitle>
+                 <SheetTitle asChild>
                     <Link href="/" className="flex items-center gap-2">
                      <BarbarianGainsLogo />
                     </Link>
